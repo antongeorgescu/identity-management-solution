@@ -13,19 +13,23 @@ namespace idm_frontend_mock
     // To change from Microsoft public cloud to a national cloud, use another value of AzureCloudInstance
     public partial class App : Application
     {
-        private static AppSettings appSettings = null; 
-
         static App()
         {
+            AppSettings appSettings = null;
             using (var reader = new StreamReader(Directory.GetCurrentDirectory() + "/appsettings.json"))
             {
                 appSettings = JsonConvert.DeserializeObject<AppSettings>(reader.ReadToEnd());
             }
 
+            ClientId = appSettings.ClientId;
+            Tenant = appSettings.Tenant;
+            Instance = appSettings.Instance;
+
             PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
                 .WithAuthority($"{Instance}{Tenant}")
                 .WithDefaultRedirectUri()
                 .Build();
+            
             TokenCacheHelper.EnableSerialization(PublicClientApp.UserTokenCache);
         }
 
@@ -37,12 +41,12 @@ namespace idm_frontend_mock
         //   - for any Work or School accounts, use organizations
         //   - for any Work or School accounts, or Microsoft personal account, use e8422127-880e-4288-928e-4ced14423628
         //   - for Microsoft Personal account, use consumers
-        private static string ClientId = appSettings.ClientId;
+        public static string ClientId { get; private set; }
 
         // Note: Tenant is important for the quickstart. We'd need to check with Andre/Portal if we
         // want to change to the AadAuthorityAudience.
-        private static string Tenant = appSettings.Tenant;
-        private static string Instance = appSettings.Instance;
+        public static string Tenant { get; private set; }
+        public static string Instance { get; private set; }
 
         public static IPublicClientApplication PublicClientApp { get; private set; }
     }
