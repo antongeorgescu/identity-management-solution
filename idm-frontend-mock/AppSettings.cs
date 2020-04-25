@@ -12,7 +12,7 @@ namespace idm_frontend_mock
         public string ApiUrl { get; set; }
         public string Tenant { get; set; }
         public string ClientId { get; set; }
-        public string ClientId2 { get; set; }
+        public string AuthClientId { get; set; }
         public string ClientSecret { get; set; }
         public string CertificateName { get; set; }
         public string IDMServiceExePath { get; set; }

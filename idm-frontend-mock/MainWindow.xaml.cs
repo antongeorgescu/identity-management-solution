@@ -32,7 +32,7 @@ namespace idm_frontend_mock
         /// <summary>
         /// Call AcquireToken - to acquire a token requiring user to sign-in
         /// </summary>
-        private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
+        private async void UserLogin_Click(object sender, RoutedEventArgs e)
         {
             AuthenticationResult authResult = null;
             var app = App.PublicClientApp;
@@ -120,7 +120,7 @@ namespace idm_frontend_mock
                 {
                     await App.PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
                     this.ResultText.Text = "User has signed-out";
-                    this.CallGraphButton.Visibility = Visibility.Visible;
+                    this.UserLoginButton.Visibility = Visibility.Visible;
                     this.SignOutButton.Visibility = Visibility.Collapsed;
                 }
                 catch (MsalException ex)
@@ -143,7 +143,7 @@ namespace idm_frontend_mock
             }
         }
 
-        private void CallUserReadAllButton_Click(object sender, RoutedEventArgs e)
+        private void CallGraphApiButton_Click(object sender, RoutedEventArgs e)
         {
             ResultText.Text = $"Command {MsGraphCommand.Text} submitted...";
             // authenticate the application against using MS Graph API

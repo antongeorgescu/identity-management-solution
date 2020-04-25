@@ -59,13 +59,6 @@ namespace idm_service_mock
         public string ClientId { get; set; }
 
         /// <summary>
-        /// Guid used by the application to uniquely identify itself to Azure AD (second application)
-        /// </summary>
-        public string Client2Id { get; set; }
-
-        public string AppsettingsPath { get; set; }
-
-        /// <summary>
         /// URL of the authority
         /// </summary>
         public string Authority

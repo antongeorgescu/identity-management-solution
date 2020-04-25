@@ -21,10 +21,10 @@ namespace idm_frontend_mock
             {
                 appSettings = JsonConvert.DeserializeObject<AppSettings>(reader.ReadToEnd());
             }
-            ClientId = appSettings.ClientId;
+            AuthClientId = appSettings.ClientId;
             Tenant = appSettings.Tenant;
             Instance = appSettings.Instance;
-            PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
+            PublicClientApp = PublicClientApplicationBuilder.Create(AuthClientId)
                 .WithAuthority($"{Instance}{Tenant}")
                 .WithDefaultRedirectUri()
                 .Build();
@@ -39,7 +39,7 @@ namespace idm_frontend_mock
         //   - for any Work or School accounts, use organizations
         //   - for any Work or School accounts, or Microsoft personal account, use e8422127-880e-4288-928e-4ced14423628
         //   - for Microsoft Personal account, use consumers
-        public static string ClientId { get; private set; }
+        public static string AuthClientId { get; private set; }
         public static string Tenant { get; private set; }
         public static string Instance { get; private set; }
         // Note: Tenant is important for the quickstart. We'd need to check with Andre/Portal if we

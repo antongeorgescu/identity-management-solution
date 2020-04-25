@@ -9,8 +9,8 @@
     <Grid>
         <StackPanel Background="Azure">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0" Width="497">
-                <Button x:Name="CallGraphButton" Content="Sign-In" Padding="5" Click="CallGraphButton_Click" Margin="5" FontFamily="Segoe Ui" HorizontalAlignment="Right" Cursor="Hand"/>
-                <Button x:Name="CallUserReadAllButton" Content="Execute Command" HorizontalAlignment="Left" Padding="5" Click="CallUserReadAllButton_Click" Margin="5" FontFamily="Segoe Ui" Cursor="Hand"/>
+                <Button x:Name="UserLoginButton" Content="Sign-In" Padding="5" Click="UserLogin_Click" Margin="5" FontFamily="Segoe Ui" HorizontalAlignment="Right" Cursor="Hand"/>
+                <Button x:Name="CallGraphApiButton" Content="Execute Command" HorizontalAlignment="Left" Padding="5" Click="CallGraphApiButton_Click" Margin="5" FontFamily="Segoe Ui" Cursor="Hand"/>
                 <TextBox x:Name="MsGraphCommand" Width="179" Height="25" Text="[Enter command]" Margin="5,5,0,0" ></TextBox>
                 <Button x:Name="SignOutButton" Content="Sign-Out" HorizontalAlignment="Right" Padding="5" Click="SignOutButton_Click" Margin="5" Visibility="Collapsed" FontFamily="Segoe Ui" Cursor="Hand"/>
 
