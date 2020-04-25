@@ -30,6 +30,8 @@ using System.Security.Cryptography.X509Certificates; //Only import this if you a
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Configuration;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace idm_service_mock
 {
@@ -42,6 +44,12 @@ namespace idm_service_mock
     {
         static void Main(string[] args)
         {
+            AADObjects AadObjects;
+            using (var reader = new StreamReader(Directory.GetCurrentDirectory() + "/aadobjects.json"))
+            {
+                AadObjects = JsonConvert.DeserializeObject<AADObjects>(reader.ReadToEnd());
+            }
+
             var action = args[0];
             // Get user token
             //var authResult = Login().GetAwaiter().GetResult();
@@ -60,17 +68,17 @@ namespace idm_service_mock
 
             mockui.RunAadQuery("ReadAllGroups");
 
-            var grpName = AADObjects.GroupName;
-            var grpMailNickname = AADObjects.GroupMailNickname;
-            var grpDescription = AADObjects.GroupDescription;
+            var grpName = AadObjects.GroupName;
+            var grpMailNickname = AadObjects.GroupMailNickname;
+            var grpDescription = AadObjects.GroupDescription;
             var jsonGroup = $"{{'description': '{grpDescription}'," +
                             $"'displayName': '{grpName}'," +
                             @"'groupTypes': ['Unified']," +
                             @"'mailEnabled': true," +
                             $"'mailNickname': '{grpMailNickname}'," +
                             "'securityEnabled': false}";
-            var userOwner = AADObjects.UserOwner;
-            var userMember = AADObjects.UserMember;
+            var userOwner = AadObjects.UserOwner;
+            var userMember = AadObjects.UserMember;
 
             switch (action)
             {
@@ -95,12 +103,10 @@ namespace idm_service_mock
             }
         }
 
-        //private static string _clientId = "2676c812-ca98-4688-ad5c-9dcb92096171";
+        
 
         // Note: Tenant is important for the quickstart. We'd need to check with Andre/Portal if we
         // want to change to the AadAuthorityAudience.
-        //private static string Tenant = "e8422127-880e-4288-928e-4ced14423628";
-        //private static string Instance = "https://login.microsoftonline.com/";
         private static IPublicClientApplication _clientApp;
 
         public static IPublicClientApplication PublicClientApp { get { return _clientApp; } }

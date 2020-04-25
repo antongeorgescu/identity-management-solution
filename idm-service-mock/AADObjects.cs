@@ -4,12 +4,12 @@ using System.Text;
 
 namespace idm_service_mock
 {
-    public static class AADObjects
+    public class AADObjects
     {
-        public static string GroupName = "Dog Assist";
-        public static string GroupMailNickname = "dog_assist";
-        public static string GroupDescription = "Self help community for dogs";
-        public static string UserOwner = "jake@alviandalabs.onmicrosoft.com";
-        public static string UserMember = "cora@alviandalabs.onmicrosoft.com";
+        public string GroupName { get; set; }
+        public string GroupMailNickname { get; set; }
+        public string GroupDescription { get; set; }
+        public string UserOwner { get; set; }
+        public string UserMember { get; set; }
     }
 }

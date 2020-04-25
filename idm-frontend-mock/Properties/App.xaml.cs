@@ -13,7 +13,8 @@ namespace idm_frontend_mock
     // To change from Microsoft public cloud to a national cloud, use another value of AzureCloudInstance
     public partial class App : Application
     {
-        private static AppSettings appSettings = null; 
+        private static AppSettings appSettings = null;
+        public static AADObjects AadObjects = null;
 
         static App()
         {
@@ -21,6 +22,12 @@ namespace idm_frontend_mock
             {
                 appSettings = JsonConvert.DeserializeObject<AppSettings>(reader.ReadToEnd());
             }
+
+            using (var reader = new StreamReader(Directory.GetCurrentDirectory() + "/aadobjects.json"))
+            {
+                AadObjects = JsonConvert.DeserializeObject<AADObjects>(reader.ReadToEnd());
+            }
+
             AuthClientId = appSettings.AuthClientId;
             Tenant = appSettings.Tenant;
             Instance = appSettings.Instance.Replace("{0}","");

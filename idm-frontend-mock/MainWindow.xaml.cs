@@ -158,24 +158,24 @@ namespace idm_frontend_mock
             switch (msGraphApiCommand)
             {
                 case "create_group":
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add group {AADObjects.GroupName}";
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Group mail nickname: {AADObjects.GroupMailNickname}";
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Group description: {AADObjects.GroupDescription}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add group {App.AadObjects.GroupName}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Group mail nickname: {App.AadObjects.GroupMailNickname}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Group description: {App.AadObjects.GroupDescription}";
                     break;
                 case "add_owner_to_group":
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add owner {AADObjects.UserOwner} to group {AADObjects.GroupName}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add owner {App.AadObjects.UserOwner} to group {App.AadObjects.GroupName}";
                     break;
                 case "add_member_to_group":
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add member {AADObjects.UserMember} to group {AADObjects.GroupName}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add member {App.AadObjects.UserMember} to group {App.AadObjects.GroupName}";
                     break;
                 case "remove_member_from_group":
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Remove member {AADObjects.UserMember} from group {AADObjects.GroupName}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Remove member {App.AadObjects.UserMember} from group {App.AadObjects.GroupName}";
                     break;
                 case "remove_owner_from_group":
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Remove owner {AADObjects.UserMember} from group {AADObjects.GroupName}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Remove owner {App.AadObjects.UserMember} from group {App.AadObjects.GroupName}";
                     break;
                 case "delete_group":
-                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Delete group:{AADObjects.GroupName}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Delete group:{App.AadObjects.GroupName}";
                     break;
             }
 
