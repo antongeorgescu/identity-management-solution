@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Configuration;
+using System.Reflection;
+using System.Windows.Controls;
 
 namespace idm_frontend_mock
 {
@@ -22,8 +24,7 @@ namespace idm_frontend_mock
 
         //Set the scope for API call to user.read
         string[] scopes = new string[] { "user.read" };
-
-
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -143,20 +144,51 @@ namespace idm_frontend_mock
             }
         }
 
+        string msGraphApiCommand = string.Empty;
+        private void MsGraphCommand_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            ComboBoxItem cbi = (ComboBoxItem)MsGraphCommand.SelectedItem;
+            msGraphApiCommand = cbi.Content.ToString();
+        }
+
         private void CallGraphApiButton_Click(object sender, RoutedEventArgs e)
         {
-            ResultText.Text = $"Command {MsGraphCommand.Text} submitted...";
+            ResultText.Text = $"Submitted command to MS Graph Api: {msGraphApiCommand}...";
+            ResultText.Text = $"{ResultText.Text}{Environment.NewLine}AAD Instance:{App.Instance}{App.Tenant}";
+            switch (msGraphApiCommand)
+            {
+                case "create_group":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add group {AADObjects.GroupName}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Group mail nickname: {AADObjects.GroupMailNickname}";
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Group description: {AADObjects.GroupDescription}";
+                    break;
+                case "add_owner_to_group":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add owner {AADObjects.UserOwner} to group {AADObjects.GroupName}";
+                    break;
+                case "add_member_to_group":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Add member {AADObjects.UserMember} to group {AADObjects.GroupName}";
+                    break;
+                case "remove_member_from_group":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Remove member {AADObjects.UserMember} from group {AADObjects.GroupName}";
+                    break;
+                case "remove_owner_from_group":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Remove owner {AADObjects.UserMember} from group {AADObjects.GroupName}";
+                    break;
+                case "delete_group":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Delete group:{AADObjects.GroupName}";
+                    break;
+            }
+
             // authenticate the application against using MS Graph API
             var process = new Process
             {
-
-
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = ConfigurationManager.AppSettings["idm_service_exe_path"],
+                    FileName = App.IdmServiceExePath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    Arguments = $"{msGraphApiCommand}"
                 }
             };
 

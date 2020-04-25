@@ -21,9 +21,10 @@ namespace idm_frontend_mock
             {
                 appSettings = JsonConvert.DeserializeObject<AppSettings>(reader.ReadToEnd());
             }
-            AuthClientId = appSettings.ClientId;
+            AuthClientId = appSettings.AuthClientId;
             Tenant = appSettings.Tenant;
-            Instance = appSettings.Instance;
+            Instance = appSettings.Instance.Replace("{0}","");
+            IdmServiceExePath = appSettings.IDMServiceExePath;
             PublicClientApp = PublicClientApplicationBuilder.Create(AuthClientId)
                 .WithAuthority($"{Instance}{Tenant}")
                 .WithDefaultRedirectUri()
@@ -42,6 +43,7 @@ namespace idm_frontend_mock
         public static string AuthClientId { get; private set; }
         public static string Tenant { get; private set; }
         public static string Instance { get; private set; }
+        public static string IdmServiceExePath { get; private set; }
         // Note: Tenant is important for the quickstart. We'd need to check with Andre/Portal if we
         // want to change to the AadAuthorityAudience.
         public static IPublicClientApplication PublicClientApp { get; private set; }

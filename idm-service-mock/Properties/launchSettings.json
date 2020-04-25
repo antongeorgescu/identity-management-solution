@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "idm-service-mock": {
+      "commandName": "Project",
+      "commandLineArgs": "create_group"
+    }
+  }
+}

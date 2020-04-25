@@ -60,17 +60,17 @@ namespace idm_service_mock
 
             mockui.RunAadQuery("ReadAllGroups");
 
-            var grpName = "Dog Assist";
-            var grpMailNickname = "dog_assist";
-            var grpDescription = "Self help community for dogs";
+            var grpName = AADObjects.GroupName;
+            var grpMailNickname = AADObjects.GroupMailNickname;
+            var grpDescription = AADObjects.GroupDescription;
             var jsonGroup = $"{{'description': '{grpDescription}'," +
                             $"'displayName': '{grpName}'," +
                             @"'groupTypes': ['Unified']," +
                             @"'mailEnabled': true," +
                             $"'mailNickname': '{grpMailNickname}'," +
                             "'securityEnabled': false}";
-            var userOwner = "jake@alviandalabs.onmicrosoft.com";
-            var userMember = "cora@alviandalabs.onmicrosoft.com";
+            var userOwner = AADObjects.UserOwner;
+            var userMember = AADObjects.UserMember;
 
             switch (action)
             {
@@ -112,7 +112,7 @@ namespace idm_service_mock
             string[] scopes = new string[] { "user.read" };
             try
             {
-                var _clientId = config.Client2Id;   // this is an app client that allows 'client app' authentication
+                var _clientId = config.ClientId;   // this is an app client that allows 'client app' authentication
                 var _instance = config.Instance.Replace("{0}", "");
                 var _tenant = config.Tenant;
 
