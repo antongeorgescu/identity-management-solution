@@ -47,6 +47,7 @@ namespace idm_frontend_mock
             {
                 authResult = await app.AcquireTokenSilent(scopes, firstAccount)
                     .ExecuteAsync();
+                App.JWTToken = authResult;
             }
             catch (MsalUiRequiredException ex)
             {
@@ -61,6 +62,7 @@ namespace idm_frontend_mock
                         .WithParentActivityOrWindow(new WindowInteropHelper(this).Handle) // optional, used to center the browser on the window
                         .WithPrompt(Prompt.SelectAccount)
                         .ExecuteAsync();
+                    App.JWTToken = authResult;
                 }
                 catch (MsalException msalex)
                 {
@@ -139,8 +141,17 @@ namespace idm_frontend_mock
             TokenInfoText.Text = "";
             if (authResult != null)
             {
-                TokenInfoText.Text += $"Username: {authResult.Account.Username}" + Environment.NewLine;
-                TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
+                TokenInfoText.Text += $"Username: {authResult.Account.Username}{Environment.NewLine}";
+                TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}{Environment.NewLine}";
+                
+                TokenInfoText.Text += $"Scopes: ";
+                foreach (var scope in authResult.Scopes)
+                    TokenInfoText.Text += $"{scope} , ";
+                //TokenInfoText.Text += $"{Environment.NewLine}Access Token: {authResult.AccessToken}";
+
+                AccessTokenText.Text = $"{authResult.AccessToken}";
+                IdTokenText.Text = $"{authResult.IdToken}";
+
             }
         }
 

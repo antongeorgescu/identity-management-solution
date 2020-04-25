@@ -54,5 +54,7 @@ namespace idm_frontend_mock
         // Note: Tenant is important for the quickstart. We'd need to check with Andre/Portal if we
         // want to change to the AadAuthorityAudience.
         public static IPublicClientApplication PublicClientApp { get; private set; }
+
+        public static AuthenticationResult JWTToken { get; set; }
     }
 }
