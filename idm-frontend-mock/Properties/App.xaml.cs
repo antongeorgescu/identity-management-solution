@@ -3,6 +3,12 @@ using System.Windows;
 using System.Configuration;
 using System.IO;
 using Newtonsoft.Json;
+using System;
+//using TcpMessenger;
+using System.ServiceModel;
+using System.Threading;
+using System.IO.Pipes;
+using System.Text;
 
 namespace idm_frontend_mock
 {
@@ -15,9 +21,14 @@ namespace idm_frontend_mock
     {
         private static AppSettings appSettings = null;
         public static AADObjects AadObjects = null;
-
+        
         static App()
         {
+            //ServiceHost host = new ServiceHost(typeof(MessageObject));
+            //NetTcpBinding binding = new NetTcpBinding();
+            //host.AddServiceEndpoint(typeof(IMessageObject), binding, new Uri("net.tcp://localhost:3333/MessageObject"));
+            //host.Open();
+            
             using (var reader = new StreamReader(Directory.GetCurrentDirectory() + "/appsettings.json"))
             {
                 appSettings = JsonConvert.DeserializeObject<AppSettings>(reader.ReadToEnd());
@@ -54,7 +65,7 @@ namespace idm_frontend_mock
         // Note: Tenant is important for the quickstart. We'd need to check with Andre/Portal if we
         // want to change to the AadAuthorityAudience.
         public static IPublicClientApplication PublicClientApp { get; private set; }
-
-        public static AuthenticationResult JWTToken { get; set; }
+        //public static AuthenticationResult JWTToken { get; set; }
     }
+  
 }

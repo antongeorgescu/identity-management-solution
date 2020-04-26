@@ -8,6 +8,9 @@ using System.Windows.Interop;
 using System.Configuration;
 using System.Reflection;
 using System.Windows.Controls;
+using System.IO.Pipes;
+using System.IO;
+using System.Threading;
 
 namespace idm_frontend_mock
 {
@@ -24,11 +27,15 @@ namespace idm_frontend_mock
 
         //Set the scope for API call to user.read
         string[] scopes = new string[] { "user.read" };
-        
+        //private static Thread pipeServer;
+
         public MainWindow()
         {
             InitializeComponent();
+
         }
+
+        AuthenticationResult authenticationResult = null;
 
         /// <summary>
         /// Call AcquireToken - to acquire a token requiring user to sign-in
@@ -47,7 +54,7 @@ namespace idm_frontend_mock
             {
                 authResult = await app.AcquireTokenSilent(scopes, firstAccount)
                     .ExecuteAsync();
-                App.JWTToken = authResult;
+                authenticationResult = authResult;
             }
             catch (MsalUiRequiredException ex)
             {
@@ -62,7 +69,7 @@ namespace idm_frontend_mock
                         .WithParentActivityOrWindow(new WindowInteropHelper(this).Handle) // optional, used to center the browser on the window
                         .WithPrompt(Prompt.SelectAccount)
                         .ExecuteAsync();
-                    App.JWTToken = authResult;
+                    authenticationResult = authResult;
                 }
                 catch (MsalException msalex)
                 {
@@ -81,9 +88,6 @@ namespace idm_frontend_mock
                 DisplayBasicTokenInfo(authResult);
                 this.SignOutButton.Visibility = Visibility.Visible;
             }
-
-            
-            
         }
 
         /// <summary>
@@ -199,7 +203,7 @@ namespace idm_frontend_mock
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
-                    Arguments = $"{msGraphApiCommand}"
+                    Arguments = $"{msGraphApiCommand} {authenticationResult.IdToken} {authenticationResult.AccessToken}"
                 }
             };
 
@@ -212,7 +216,8 @@ namespace idm_frontend_mock
             }
 
             process.WaitForExit();
-            ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Command executed.";
+            process.Close();
+            ResultText.Text = $"{ResultText.Text}IDM Service instance shutdown.";
         }
     }
 }

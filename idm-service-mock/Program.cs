@@ -22,16 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 using Microsoft.Identity.Client;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Cryptography.X509Certificates; //Only import this if you are using certificate
 using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Configuration;
 using System.IO;
 using Newtonsoft.Json;
+using NLog;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace idm_service_mock
 {
@@ -42,8 +41,16 @@ namespace idm_service_mock
     /// </summary>
     class Program
     {
+        private static int numClients = 1;
+        private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
+
         static void Main(string[] args)
         {
+            //EndpointAddress ep = new EndpointAddress("net.tcp://localhost:3333/MessageObject");
+            //Binding binding = new NetTcpBinding(SecurityMode.None);
+            //ChannelFactory<IMessageObject> chFactory = new ChannelFactory<IMessageObject>(binding, ep);
+            //IMessageObject instance = chFactory.CreateChannel();
+
             AADObjects AadObjects;
             using (var reader = new StreamReader(Directory.GetCurrentDirectory() + "/aadobjects.json"))
             {
@@ -51,6 +58,11 @@ namespace idm_service_mock
             }
 
             var action = args[0];
+            //var userIdToken = args[1];
+            //var userAccessToken = args[2];
+
+            var userIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkN0VHVoTUptRDVNN0RMZHpEMnYyeDNRS1NSWSJ9.eyJhdWQiOiIyNjc2YzgxMi1jYTk4LTQ2ODgtYWQ1Yy05ZGNiOTIwOTYxNzEiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vZTg0MjIxMjctODgwZS00Mjg4LTkyOGUtNGNlZDE0NDIzNjI4L3YyLjAiLCJpYXQiOjE1ODc5Mjk5MjMsIm5iZiI6MTU4NzkyOTkyMywiZXhwIjoxNTg3OTMzODIzLCJuYW1lIjoiSmFrZSBUcmFqYW5vdmljaCIsIm9pZCI6IjU0Yjc5NmU4LTQ3Y2QtNDk3Ny04ZjhjLWU1NDExMDE3ZjgzMyIsInByZWZlcnJlZF91c2VybmFtZSI6Impha2VAYWx2aWFuZGFsYWJzLm9ubWljcm9zb2Z0LmNvbSIsInN1YiI6IlNFLWpxNUIyazktVnU2R05IYTBLZzNmWVc0Q01TUGt5SjJjRmJQUXpjVHciLCJ0aWQiOiJlODQyMjEyNy04ODBlLTQyODgtOTI4ZS00Y2VkMTQ0MjM2MjgiLCJ1dGkiOiJTZ1QyUEI2c1IwS1FJQ01LSlhkWkFBIiwidmVyIjoiMi4wIn0.hwEa959EMtm2lcbvcopVEEt1t1m6UNYL2K-E_M9ZHMGoh61QTHQ5kxB4Gb_dQVR_kp710w6s_s_ng8653yxb7amKclujQdnQfCGhlxNfEhQX5OuLqhpx7dxJ2bgT189XLhO_pZna-1NtS0j1bIQ9jgbVSQFTqR3Gvu_dqhH0wv--XYUI_blXCfHorOWz5ZqFDG75BLlxEGumzF3_4t8SxkE26XJKJhUqfZ579FLN-qGhmihuOAUGFs_oSdYdsHLeSU-tFrdjusiUS44QiWNUh2amqLoVHeHGbqmVu0FnBwSse4wDAWRkVb0DS2njkJmJcIHWZ_P8dJPPAuA9ImySqQ";
+            var userAccessToken = "eyJ0eXAiOiJKV1QiLCJub25jZSI6IkNmeEJkMEgwTjZlbHBoellteUlUb3FDaUVHTkdPbHkzRWxPSzZqMUp0a1EiLCJhbGciOiJSUzI1NiIsIng1dCI6IkN0VHVoTUptRDVNN0RMZHpEMnYyeDNRS1NSWSIsImtpZCI6IkN0VHVoTUptRDVNN0RMZHpEMnYyeDNRS1NSWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9lODQyMjEyNy04ODBlLTQyODgtOTI4ZS00Y2VkMTQ0MjM2MjgvIiwiaWF0IjoxNTg3OTI5OTIzLCJuYmYiOjE1ODc5Mjk5MjMsImV4cCI6MTU4NzkzMzgyMywiYWNjdCI6MCwiYWNyIjoiMSIsImFpbyI6IkFTUUEyLzhQQUFBQXF0c0w1SUhOMVFIWkJubmNIWnhwZldDVWM4cHh6NytUM3A3VWNIenh0MjA9IiwiYW1yIjpbInB3ZCJdLCJhcHBfZGlzcGxheW5hbWUiOiJhYWQtaWRtbGlnaHQtYXV0aGVudGljYXRlIiwiYXBwaWQiOiIyNjc2YzgxMi1jYTk4LTQ2ODgtYWQ1Yy05ZGNiOTIwOTYxNzEiLCJhcHBpZGFjciI6IjAiLCJmYW1pbHlfbmFtZSI6IlRyYWphbm92aWNoIiwiZ2l2ZW5fbmFtZSI6Ikpha2UiLCJpcGFkZHIiOiIxOTguNTguMTg3LjE3MiIsIm5hbWUiOiJKYWtlIFRyYWphbm92aWNoIiwib2lkIjoiNTRiNzk2ZTgtNDdjZC00OTc3LThmOGMtZTU0MTEwMTdmODMzIiwicGxhdGYiOiIzIiwicHVpZCI6IjEwMDMyMDAwODExNjREMDEiLCJzY3AiOiJvcGVuaWQgcHJvZmlsZSBVc2VyLlJlYWQgZW1haWwiLCJzdWIiOiJmcTRNX2tLUmRDMzVPa3pXb0ZxWEpFcWU5em0wZVdLTDJBZlNIQnNNQ3VzIiwidGlkIjoiZTg0MjIxMjctODgwZS00Mjg4LTkyOGUtNGNlZDE0NDIzNjI4IiwidW5pcXVlX25hbWUiOiJqYWtlQGFsdmlhbmRhbGFicy5vbm1pY3Jvc29mdC5jb20iLCJ1cG4iOiJqYWtlQGFsdmlhbmRhbGFicy5vbm1pY3Jvc29mdC5jb20iLCJ1dGkiOiJTZ1QyUEI2c1IwS1FJQ01LSlhkWkFBIiwidmVyIjoiMS4wIiwid2lkcyI6WyJmZGQ3YTc1MS1iNjBiLTQ0NGEtOTg0Yy0wMjY1MmZlOGZhMWMiLCJmZTkzMGJlNy01ZTYyLTQ3ZGItOTFhZi05OGMzYTQ5YTM4YjEiLCI0YTVkOGY2NS00MWRhLTRkZTQtODk2OC1lMDM1YjY1MzM5Y2YiXSwieG1zX3N0Ijp7InN1YiI6IlNFLWpxNUIyazktVnU2R05IYTBLZzNmWVc0Q01TUGt5SjJjRmJQUXpjVHcifSwieG1zX3RjZHQiOjE1NzAxODk4Njl9.Y6vQEB-I-hMgInGSimAB_SZV3trcZHx1AK3Rn444uE8NG9CW-vvlncvHyPBgcB3T38NHZuFacwvGHvM0LRQWjDgsaiMephoGXwql9JdYf2Lu-zf-hRidIp0NjVlz4gQ8U0LyU-wm0Khosmy1DOLiMeUwO9z5lhsrlxBpO0jJTtIpvUeHZh9Pjl6Pxqte9UJDCKRbhBAaDwjD34tdAD1H7Eym2qgurMhPvnNFnJ_49wGzvCMiBEOr1ITIaVveN5MkS_3dBsICG4pZfS4C55oA-pdSzlZ7XH1dr_irINH4W_AyR3fJ_W9FkynaEQNGCmDe9cDxcTzZCLXUFRjK2X-uKQ";
             // Get user token
             //var authResult = Login().GetAwaiter().GetResult();
 
@@ -61,6 +73,36 @@ namespace idm_service_mock
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new FIDMLight());
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonIdToken = handler.ReadToken(userIdToken);
+            var idToken = handler.ReadToken(userIdToken) as JwtSecurityToken;
+            var jsonAccessToken = handler.ReadToken(userAccessToken);
+            var accessToken = handler.ReadToken(userAccessToken) as JwtSecurityToken;
+            //var jti = accessToken.Payload.Claims.First(claim => claim.Type == "jti").Value;
+
+            logger.Info($">>>>>--- Command initiated: {action} | Date/time: {DateTime.Now}");
+            logger.Info($"***** ID token: {idToken}");
+            
+            var claims = string.Empty;
+            foreach (var claim in idToken.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** ID token - Header claims: {claims}");
+            claims = string.Empty;
+            foreach (var claim in idToken.Payload.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** ID token - Payload claims: {claims}");
+
+            logger.Info($"***** Access token: {accessToken}");
+            claims = string.Empty;
+            foreach (var claim in accessToken.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** Access token - Header claims: {claims}");
+            claims = string.Empty;
+            foreach (var claim in accessToken.Payload.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** Access token - Payload claims: {claims}");
+            //logger.Info($"JTI claims: {jti}");
 
             var mockui = new MsGraphFacade();
 
@@ -84,26 +126,31 @@ namespace idm_service_mock
             {
                 case "create_group":
                     mockui.RunAadQuery("CreateGroup", jsonGroup);
+                    logger.Info($"***** Command details: create_group, args:{jsonGroup}");
                     break;
                 case "add_owner_to_group":
                     mockui.RunAadQuery("AddGroupOwner", grpName, userOwner);
+                    logger.Info($"***** Command details: add_owner_to_group, args:{grpName},{userOwner}");
                     break;
                 case "add_member_to_group":
                     mockui.RunAadQuery("AddGroupMember", grpName, userMember);
+                    logger.Info($"***** Command details: add_member_to_group, args:{grpName},{userMember}");
                     break;
                 case "remove_member_from_group":
                     mockui.RunAadQuery("RemoveGroupMember", grpName, userMember);
+                    logger.Info($"***** Command details: remove_member_from_group, args:{grpName},{userMember}");
                     break;
                 case "remove_owner_from_group":
                     mockui.RunAadQuery("RemoveGroupOwner", grpName, userOwner);
+                    logger.Info($"***** Command details: remove_owner_from_group, args:{grpName},{userOwner}");
                     break;
                 case "delete_group":
                     mockui.RunAadQuery("DeleteGroup", grpName);
+                    logger.Info($"***** Command details: delete_group, args:{grpName}");
                     break;
             }
+            logger.Info($"<<<<<--- Command ended | Date/time: {DateTime.Now}{ Environment.NewLine}");
         }
-
-        
 
         // Note: Tenant is important for the quickstart. We'd need to check with Andre/Portal if we
         // want to change to the AadAuthorityAudience.
@@ -266,4 +313,6 @@ namespace idm_service_mock
         }
 
     }
+
+    
 }
