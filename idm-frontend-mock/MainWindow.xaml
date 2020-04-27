@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:idm_frontend_mock"
         mc:Ignorable="d"
-        Title="MainWindow" Height="Auto" Width="625" SizeToContent="Height">
+        Title="MainWindow" Height="Auto" Width="825" SizeToContent="Height">
     <Grid>
         <StackPanel Background="Azure">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0" Width="600">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0" Width="800">
                 <Button x:Name="UserLoginButton" Content="Sign-In" Padding="5" Click="UserLogin_Click" Margin="5" FontFamily="Segoe Ui" HorizontalAlignment="Right" Cursor="Hand"/>
                 <Button x:Name="CallGraphApiButton" Content="Execute Command" HorizontalAlignment="Left" Padding="5" Click="CallGraphApiButton_Click" Margin="5" FontFamily="Segoe Ui" Cursor="Hand"/>
                 <!--<TextBox x:Name="MsGraphCommand" Width="179" Height="25" Text="[Enter command]" Margin="5,5,0,0" ></TextBox>-->
@@ -25,17 +25,17 @@
                 <Button x:Name="SignOutButton" Content="Sign-Out" HorizontalAlignment="Right" Padding="5" Click="SignOutButton_Click" Margin="5" Visibility="Collapsed" FontFamily="Segoe Ui" Cursor="Hand"/>
             </StackPanel>
             <StackPanel>
-                <Label Content="API Call Results" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
+                <Label Content="MS Graph API Call Results" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
                 <TextBox x:Name="ResultText" TextWrapping="Wrap" MinHeight="120" MaxHeight="300" Margin="5" FontFamily="Segoe Ui" VerticalScrollBarVisibility="Visible"/>
-                <Label Content="Token Info" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
-                <TextBox x:Name="TokenInfoText" TextWrapping="Wrap" MinHeight="70" Margin="5" FontFamily="Segoe Ui" />
+                <Label Content="ID Token Info" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
+                <TextBox x:Name="TokenInfoText" TextWrapping="Wrap" MinHeight="70" MaxHeight="100" Margin="5" FontFamily="Segoe Ui" VerticalScrollBarVisibility="Visible" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <StackPanel Width="305">
+                <StackPanel Width="405">
                     <Label Content="[IDM User] Access Token (raw)" Margin="5,0,0,0" FontFamily="Segoe Ui" />
                     <TextBox x:Name="AccessTokenText" MaxHeight="200" TextWrapping="Wrap" MinHeight="120" Margin="5" FontFamily="Segoe Ui" IsReadOnly="True" VerticalScrollBarVisibility="Visible" />
                 </StackPanel>
-                <StackPanel Width="305">
+                <StackPanel Width="405">
                     <Label Content="[IDM User] ID Token (raw)" Margin="2,0,0,0" FontFamily="Segoe Ui" />
                     <TextBox x:Name="IdTokenText" TextWrapping="Wrap" MaxHeight="200" MinHeight="120" Margin="5" FontFamily="Segoe Ui" IsReadOnly="True" VerticalScrollBarVisibility="Visible" />
                 </StackPanel>

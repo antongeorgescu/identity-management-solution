@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.IO.Pipes;
 using System.IO;
 using System.Threading;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace idm_frontend_mock
 {
@@ -27,7 +28,7 @@ namespace idm_frontend_mock
 
         //Set the scope for API call to user.read
         //string[] scopes = new string[] { "user.read", "Directory.Read.All", "Directory.ReadWrite.All","Group.ReadWrite.All","GroupMember.ReadWrite.All"};
-        string[] scopes = new string[] { "user.read","openid","profile","email","Directory.Read.All", "Directory.ReadWrite.All", "Group.ReadWrite.All", "GroupMember.ReadWrite.All" };
+        string[] scopes = new string[] { "user.read","openid","profile","email","Directory.Read.All", "Group.Read.All", "GroupMember.Read.All" };
         
         //private static Thread pipeServer;
 
@@ -86,7 +87,8 @@ namespace idm_frontend_mock
 
             if (authResult != null)
             {
-                ResultText.Text = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken);
+                var userProfile = await GetHttpContentWithToken(graphAPIEndpoint, authResult.AccessToken);
+                TokenInfoText.Text = $"*** Profile: {userProfile}";
                 DisplayBasicTokenInfo(authResult);
                 this.SignOutButton.Visibility = Visibility.Visible;
             }
@@ -144,17 +146,31 @@ namespace idm_frontend_mock
         /// </summary>
         private void DisplayBasicTokenInfo(AuthenticationResult authResult)
         {
-            TokenInfoText.Text = "";
+            //TokenInfoText.Text = "";
             if (authResult != null)
             {
-                TokenInfoText.Text += $"Username: {authResult.Account.Username}{Environment.NewLine}";
-                TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}{Environment.NewLine}";
+                TokenInfoText.Text += $"*** Username: {authResult.Account.Username}{Environment.NewLine}";
+                TokenInfoText.Text += $"*** Token Expires: {authResult.ExpiresOn.ToLocalTime()}{Environment.NewLine}";
                 
-                TokenInfoText.Text += $"Scopes: ";
+                TokenInfoText.Text += $"*** Scopes: ";
                 foreach (var scope in authResult.Scopes)
                     TokenInfoText.Text += $"{scope} , ";
-                //TokenInfoText.Text += $"{Environment.NewLine}Access Token: {authResult.AccessToken}";
+                TokenInfoText.Text += $"{Environment.NewLine}";
+                
+                var handler = new JwtSecurityTokenHandler();
+                var jsonIdToken = handler.ReadToken(authResult.IdToken);
+                var idToken = handler.ReadToken(authResult.IdToken) as JwtSecurityToken;
 
+                TokenInfoText.Text += $"*** Group OIDs: ";
+                var groups = idToken.Claims.Select(x => x).Where(x => x.Type == "groups");
+                foreach (var group in groups)
+                    TokenInfoText.Text += $"{group.Value} , ";
+                TokenInfoText.Text += $"{Environment.NewLine}";
+                TokenInfoText.Text += $"*** App Roles: ";
+                var roles = idToken.Claims.Select(x => x).Where(x => x.Type == "roles");
+                foreach (var role in roles)
+                    TokenInfoText.Text += $"{role.Value} , ";
+                
                 AccessTokenText.Text = $"{authResult.AccessToken}";
                 IdTokenText.Text = $"{authResult.IdToken}";
 
