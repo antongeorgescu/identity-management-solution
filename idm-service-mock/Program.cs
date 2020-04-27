@@ -84,28 +84,30 @@ namespace idm_service_mock
             logger.Info($"***** [IDM User] Name: {idToken.Claims.First(x => x.Type == "name").Value}");
             logger.Info($"***** [IDM User] ObjectId: {idToken.Claims.First(x => x.Type == "oid").Value}");
             logger.Info($"***** [IDM User] Principal Username: {idToken.Claims.First(x => x.Type == "preferred_username").Value}");
-            logger.Info($"***** [IDM Service] Command initiated: {action} @ Date/time: {DateTime.Now}");
+            
             //logger.Info($"***** User ID token: {idToken}");
 
-            //var claims = string.Empty;
-            //foreach (var claim in idToken.Claims)
-            //    claims += $"{claim.Type}:{claim.Value} | ";
-            //logger.Info($"***** [IDM User] ID token - Header claims: {claims}");
-            //claims = string.Empty;
-            //foreach (var claim in idToken.Payload.Claims)
-            //    claims += $"{claim.Type}:{claim.Value} | ";
-            //logger.Info($"***** [IDM User] ID token - Payload claims: {claims}");
+            var claims = string.Empty;
+            foreach (var claim in idToken.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** [IDM User] ID token - Header claims: {claims}");
+            claims = string.Empty;
+            foreach (var claim in idToken.Payload.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** [IDM User] ID token - Payload claims: {claims}");
 
-            //logger.Info($"***** [IDM User] Access token: {accessToken}");
-            //claims = string.Empty;
-            //foreach (var claim in accessToken.Claims)
-            //    claims += $"{claim.Type}:{claim.Value} | ";
-            //logger.Info($"***** [IDM User] Access token - Header claims: {claims}");
-            //claims = string.Empty;
-            //foreach (var claim in accessToken.Payload.Claims)
-            //    claims += $"{claim.Type}:{claim.Value} | ";
-            //logger.Info($"***** [IDM User] Access token - Payload claims: {claims}");
+            logger.Info($"***** [IDM User] Access token: {accessToken}");
+            claims = string.Empty;
+            foreach (var claim in accessToken.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** [IDM User] Access token - Header claims: {claims}");
+            claims = string.Empty;
+            foreach (var claim in accessToken.Payload.Claims)
+                claims += $"{claim.Type}:{claim.Value} | ";
+            logger.Info($"***** [IDM User] Access token - Payload claims: {claims}");
             //logger.Info($"JTI claims: {jti}");
+
+            logger.Info($"***** [IDM Service] Command initiated: {action} @ Date/time: {DateTime.Now}");
 
             var mockui = new MsGraphFacade();
 

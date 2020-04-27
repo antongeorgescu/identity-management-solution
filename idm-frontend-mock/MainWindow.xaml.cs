@@ -27,7 +27,7 @@ namespace idm_frontend_mock
 
         //Set the scope for API call to user.read
         //string[] scopes = new string[] { "user.read", "Directory.Read.All", "Directory.ReadWrite.All","Group.ReadWrite.All","GroupMember.ReadWrite.All"};
-        string[] scopes = new string[] { "user.read","openid","profile","email" };
+        string[] scopes = new string[] { "user.read","openid","profile","email","Directory.Read.All", "Directory.ReadWrite.All", "Group.ReadWrite.All", "GroupMember.ReadWrite.All" };
         
         //private static Thread pipeServer;
 
@@ -155,7 +155,7 @@ namespace idm_frontend_mock
                     TokenInfoText.Text += $"{scope} , ";
                 //TokenInfoText.Text += $"{Environment.NewLine}Access Token: {authResult.AccessToken}";
 
-                //AccessTokenText.Text = $"{authResult.AccessToken}";
+                AccessTokenText.Text = $"{authResult.AccessToken}";
                 IdTokenText.Text = $"{authResult.IdToken}";
 
             }
