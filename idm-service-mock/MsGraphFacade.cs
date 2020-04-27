@@ -328,6 +328,7 @@ namespace idm_service_mock
             foreach (JProperty child in result.Properties().Where(p => !p.Name.StartsWith("@")))
             {
                 Debug.WriteLine($"{child.Name} = {child.Value}");
+                Program.logger.Info($"{child.Value}");
             }
         }
     }

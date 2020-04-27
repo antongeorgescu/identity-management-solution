@@ -2,7 +2,7 @@
   "profiles": {
     "idm-service-mock": {
       "commandName": "Project",
-      "commandLineArgs": "create_group 123 321"
+      "commandLineArgs": "read_all_groups 123 321"
     }
   }
 }

@@ -26,7 +26,9 @@ namespace idm_frontend_mock
         string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
 
         //Set the scope for API call to user.read
-        string[] scopes = new string[] { "user.read" };
+        //string[] scopes = new string[] { "user.read", "Directory.Read.All", "Directory.ReadWrite.All","Group.ReadWrite.All","GroupMember.ReadWrite.All"};
+        string[] scopes = new string[] { "user.read","openid","profile","email" };
+        
         //private static Thread pipeServer;
 
         public MainWindow()
@@ -153,7 +155,7 @@ namespace idm_frontend_mock
                     TokenInfoText.Text += $"{scope} , ";
                 //TokenInfoText.Text += $"{Environment.NewLine}Access Token: {authResult.AccessToken}";
 
-                AccessTokenText.Text = $"{authResult.AccessToken}";
+                //AccessTokenText.Text = $"{authResult.AccessToken}";
                 IdTokenText.Text = $"{authResult.IdToken}";
 
             }
@@ -191,6 +193,12 @@ namespace idm_frontend_mock
                     break;
                 case "delete_group":
                     ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Delete group:{App.AadObjects.GroupName}";
+                    break;
+                case "read_all_users":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Read all users";
+                    break;
+                case "read_all_groups":
+                    ResultText.Text = $"{ResultText.Text}{Environment.NewLine}Read all groups";
                     break;
             }
 
