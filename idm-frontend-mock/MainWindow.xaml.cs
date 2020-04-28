@@ -170,6 +170,21 @@ namespace idm_frontend_mock
                 var roles = idToken.Claims.Select(x => x).Where(x => x.Type == "roles");
                 foreach (var role in roles)
                     TokenInfoText.Text += $"{role.Value} , ";
+                var isIdmAuthorized = false;
+                if ((roles != null) && roles.Select(x => x.Value).Contains("IDMToolUser"))
+                    isIdmAuthorized = true;
+                if (!isIdmAuthorized)
+                {
+                    MsGraphCommand.IsEnabled = false;
+                    CallGraphApiButton.IsEnabled = false;
+                    ResultText.Text += "WARNING! You are not authorized to use IDM Tool. Please sign-out...";
+                }
+                else
+                {
+                    MsGraphCommand.IsEnabled = true;
+                    CallGraphApiButton.IsEnabled = true;
+                }
+                
                 
                 AccessTokenText.Text = $"{authResult.AccessToken}";
                 IdTokenText.Text = $"{authResult.IdToken}";
