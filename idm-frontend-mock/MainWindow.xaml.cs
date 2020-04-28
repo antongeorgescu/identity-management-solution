@@ -133,6 +133,9 @@ namespace idm_frontend_mock
                     this.ResultText.Text = "User has signed-out";
                     this.UserLoginButton.Visibility = Visibility.Visible;
                     this.SignOutButton.Visibility = Visibility.Collapsed;
+
+                    MsGraphCommand.IsEnabled = true;
+                    CallGraphApiButton.IsEnabled = true;
                 }
                 catch (MsalException ex)
                 {
